@@ -1,0 +1,85 @@
+Summed=cspfunc(dur,imdim,total,parangs);
+
+
+p = imdim^2;
+
+for i = 1:dur
+    r(:,i)=reshape(total(:,:,i),p,1);
+    r(:,i) = r(:,i)-mean(r(:,i));
+end
+
+r = r';
+
+spread = floor(dur/4);
+for k=ceil(dur/4):ceil(dur*3/4)
+
+    Xh = r(k-spread:k+spread,:);
+    Xf = r([1:k-spread-1 k+spread+1:end],:);
+
+    Rh = Xh*Xh'*1/trace(Xh*Xh');
+    Rf = Xf*Xf'*1/trace(Xf*Xf');
+
+    R = Rh+Rf;
+
+    [U0,Sig] = eig(R);
+    [Sig,inds] = sort(diag(Sig),1,'descend');
+    Sig = diag(Sig,0);
+    U0 = U0(:, inds);
+
+    P = Sig^(-.5)*U0';
+    Sh = P*Rh*P';
+    Sf = P*Rf*P';
+
+    [Uh,eigh] = eig(Sh);
+    [eigh,indsh] = sort(diag(eigh),1,'descend');
+    eigh = diag(eigh,0);
+    Uh = Uh(:, indsh);
+
+    [Uf,eigf] = eig(Sf);
+    [eigf,indsf] = sort(diag(eigf),1,'ascend');
+    eigf = diag(eigf,0);
+    Uf = Uf(:, indsf);
+%         
+%         blah = [diag(eigh) diag(eigf) diag(eigh)+diag(eigf)]
+%         
+%         figure()
+%         image(Uh-Uf,'CDataMapping','scaled')
+%         colorbar
+%         
+    W = Uh'*P;
+    sig = [(W'*W)*Xh; -(W'*W)*Xf];
+
+    for i = 1:floor(dur/2)
+        if i < k - spread
+            Signal(:,:,i) = reshape(sig(i+dur/2,:),imdim,imdim);
+        elseif i <= k+spread
+            Signal(:,:,i) = reshape(sig(i-k+spread+1,:),imdim,imdim);
+        else 
+            Signal(:,:,i) = reshape(sig(i,:),imdim,imdim);
+        end
+%         figure()
+%         image(Signal(:,:,i),'CDataMapping','scaled')
+%         colorbar
+%         title('These are Signals before rotation')
+        rotated = imrotate(Signal(:,:,i),parangs(i),'bicubic','crop');
+    end
+       
+    tempsummed(:,:,k-ceil(dur/4)+1)=sum(rotated,3);
+
+end
+
+Summed=sum(tempsummed,3);
+
+% for i=1:length(tempsummed(1,1,:))
+%     
+%     figure()
+%     image(tempsummed(:,:,i),'CDataMapping','scaled')
+%     colorbar
+%     title('Individual sums')
+%     
+% end
+
+% figure()
+% image(Summed,'CDataMapping','scaled')
+% colorbar
+% title('total sum')

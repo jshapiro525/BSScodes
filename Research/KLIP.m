@@ -1,7 +1,7 @@
-function [Sum]=KLIP(dur,imdim,total,parangs)
+function [Sum,KLIP_res,KLIP_parangs,lambda]=KLIP(dur,imdim,total,parangs)
 
 p=imdim^2;
-K=1;
+K=2;
 
 for k=1:dur    
     t=reshape(total(:,:,k),1,p)';
@@ -27,10 +27,23 @@ for k=1:dur
     psf=(ZK'*ZK)*tbar;    
     PSF(:,:,k)=reshape(psf',imdim,imdim);
     Signal(:,:,k)=reshape(sig(:,k)',imdim,imdim);
-    rotsig(:,:,k)=imrotate(Signal(:,:,k),-1*parangs(k),'bicubic','crop');
-    k
+    rotsig(:,:,k)=imrotate(Signal(:,:,k),parangs(k),'bicubic','crop');
 end
 
 Sum=sum(rotsig,3);
+
+delta=floor(dur/3);
+
+    for i=1:3
+        for j=1:delta
+            pos=delta*(i-1)+j;
+            intermediatederotate(:,:,j)=imrotate(Signal(:,:,pos),parangs(pos)-parangs(pos-j+1),'bicubic','crop');
+        end
+        tempparangs(i)=parangs(delta*(i-1)+1);
+        tempdata(:,:,i)=sum(intermediatederotate,3);
+    end
+    KLIP_parangs=tempparangs;
+    KLIP_res=tempdata;
+    finalKLIP=Sum;
 
 end

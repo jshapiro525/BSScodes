@@ -1,4 +1,4 @@
-function [newimage] = addspeckle(tot,imdim)
+function [newimage] = addspeckle(tot,imdim,invrpois)
 
 
 OWA=50;
@@ -18,22 +18,8 @@ for i=1:imdim
     end
 end
 
-PSF=PSF*200000/6;
+PSF=PSF*200000/6*invrpois;
 
 newimage=PSF+tot;
-% figure(1)
-% image(PSF,'CDataMapping','Scaled')
-% colorbar
-% title('psf')
-% 
-% figure(2)
-% image(log10(PSF),'CDataMapping','Scaled')
-% title('logpsf')
-% colorbar
-% 
-% figure(3)
-% image(newimage,'CDataMapping','Scaled')
-% title('newimage')
-% colorbar
 
 end

@@ -1,6 +1,6 @@
-function [total, parangs, centers]=generatefakedata(dur,imdim,step,ratiopoisson,radii);
+function [total, parangs, centers]=generatefakedata(dur,imdim,stepsize,rpois,radii,nper);
 
-maxsigstr=.08;
+maxsigstr=.15;
 radii=radii(radii~=0);
 nplanets=length(radii);
 
@@ -23,7 +23,7 @@ for i=1:imdim
 end
 
 base=base/max(max(base));
-move=(1/4)*pi/180;
+move=(1/4)*pi/180*stepsize;
 
 thetas=[0 pi/3 2*pi/3];
 
@@ -41,8 +41,8 @@ for k=1:dur
     [injected]=injectplanets(base,i,j,imdim,maxsigstr);
     
     pois=imnoise(injected,'poisson');
-    multipl=imnoise(pois,'speckle',.01);
-    total(:,:,k)=addspeckle(multipl,imdim);
+    multipl=imnoise(pois,'speckle',.02*rpois);
+    total(:,:,k)=addspeckle(multipl,imdim,1-rpois);
     
     parangs(k)=move*180/pi*(k-1);
     
@@ -51,8 +51,8 @@ for k=1:dur
     end
 end
 
-if nplanets~=6
-    centers=[centers;zeros(6-nplanets,2)];
+if nplanets~=nper
+    centers=[centers;zeros(nper-nplanets,2)];
 end
 
 

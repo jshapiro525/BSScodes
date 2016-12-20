@@ -1,8 +1,7 @@
-dur=15;
-imdim=121;
+dur=12;
+imdim=81;
 
-imdim = 121;
-[stat,planetsignal,nonstatnoise,total,rottotal,Sum,speckle,parangs] = makefakedatatrue(dur,imdim,120/dur,0);
+[total, parangs, centers]=generatefakedata(dur,imdim,10,.5,imdim/3,1);
 
 for i=1:dur
     A(:,i)=reshape(total(:,:,i),imdim^2,1);

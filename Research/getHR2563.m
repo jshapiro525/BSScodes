@@ -1,14 +1,14 @@
-function [DATA,rotDATA,parangs,Sum] = getHR2563(trunc,imdim)
+function [DATA,parangs,Sum] = getBetaPic(trunc,imdim)
 
 parangs=[];
 DATA=[];
 rotDATA=[];
 
-for i = 74:109
+for i = 291:328
     
-    if i~=94 && i~=107
+    if i~=304
        
-        name='S20160125S0';
+        name='S20151106S0';
         exten='_spdc_distorcorr.fits';
         filenumb=i;
         if filenumb<10
@@ -31,7 +31,7 @@ for i = 74:109
             w=floor(imdim/2);
             data=data(c-w:c+w,c-w:c+w,:);
         end
-        thissum=sum(data(:,:,10:30),3);
+        thissum=sum(data(:,:,15:25),3);
         DATA=cat(3,DATA,thissum);
         rotDATA=cat(3,rotDATA,imrotate(thissum,thisparang*-1,'bicubic','crop'));
     end

@@ -15,12 +15,12 @@ newImg = zeros(size(img));
 
 %Creates the 2D multivariate Guassian distrubution model
 %Parameters are sigma,x0,y0
-f = fittype('a1*exp(-(x-sectionHW-1)^2/(2*sectionHW^2)-(y-sectionHW-1)^2/(2*sectionHW^2))','independent',{'x','y'},'dependent','z','problem','sectionHW')
+f = fittype('a1*exp(-(x-sectionHW-1)^2/(2*sectionHW^2)-(y-sectionHW-1)^2/(2*sectionHW^2))','independent',{'x','y'},'dependent','z','problem','sectionHW');
 
 %If not computing in parallel, change 'parfor' to 'for'
 for r = 1:rows
+%     disp(num2str(r))
     for c = 1:cols
-        fprintf('(%f,%f)\n',r,c)
         
         %computes the range of column and row values of current section
         c_vals = c-sectionHW:c+sectionHW;
