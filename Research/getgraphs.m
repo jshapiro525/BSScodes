@@ -3,13 +3,13 @@ clear all;
 clc;
 dur=42;
 stepsize=6;
-imdim=81;
-numpoints=2;
+imdim=75;
+numpoints=1;
 nper=1;
 csize=4;
 tic
 
-pointsperpoint=2;
+pointsperpoint=1;
 
 for i=1:numpoints
    
@@ -40,21 +40,25 @@ for i=1:numpoints
         [icaA(:,:,i),D] = snrMap2(img_scaled,2);
         centICA = gaussCent2(finalICA(:,:,i), 0.5, [centers(1)-csize centers(1)+csize], [centers(2)-csize centers(2)+csize]);
         errICA(j)=norm(centICA-centers);
+        toc
 
         img_scaled = imresize(finalSSA(:,:,i),2/sqrt(2*log(2)),'bicubic');
         [ssaA(:,:,i),D] = snrMap2(img_scaled,2);
         centSSA = gaussCent2(finalSSA(:,:,i), 0.5, [centers(1)-csize centers(1)+csize], [centers(2)-csize centers(2)+csize]);
         errSSA(j)=norm(centSSA-centers);
+        toc
 
         img_scaled = imresize(finalCSP(:,:,i),2/sqrt(2*log(2)),'bicubic');
         [cspA(:,:,i),D] = snrMap2(img_scaled,2);
         centCSP = gaussCent2(finalCSP(:,:,i), 0.5, [centers(1)-csize centers(1)+csize], [centers(2)-csize centers(2)+csize]);
         errCSP(j)=norm(centCSP-centers);
+        toc
 
         klipSNR(j)=max(max(klipA(:,:,i)));
         ssaSNR(j)=max(max(ssaA(:,:,i)));
         icaSNR(j)=max(max(icaA(:,:,i)));
-        cspSNR(j)=max(max(cspA(:,:,i))); 
+        cspSNR(j)=max(max(cspA(:,:,i)));
+        toc
     end
     
     klipSNR(i)=sum(klipSNR)/pointsperpoint;

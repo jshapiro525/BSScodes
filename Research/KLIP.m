@@ -3,7 +3,7 @@ function [Sum,KLIP_res,KLIP_parangs,lambda]=KLIP(dur,imdim,total,parangs)
 p=imdim^2;
 K=2;
 
-for k=1:dur    
+parfor k=1:dur    
     t=reshape(total(:,:,k),1,p)';
     tbar=t-mean(t);
     r=[];

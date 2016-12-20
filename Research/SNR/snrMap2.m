@@ -17,7 +17,7 @@ f = fittype('a1*exp(-(x-sectionHW-1)^2/(2*sigma^2)-(y-sectionHW-1)^2/(2*sigma^2)
 %If not computing in parallel, change 'parfor' to 'for'
 parfor r = 1:rows
     for c = 1:cols
-        fprintf('(%f,%f)\n',r,c)
+        %fprintf('(%f,%f)\n',r,c)
         
         %computes the range of column and row values of current section
         c_vals = c-sectionHW:c+sectionHW;
