@@ -21,6 +21,7 @@ for i=1:numpoints
         ratiopoisson=(i)/numpoints;
 
         [total,parangs,centers] = generatefakedata(dur,imdim,stepsize,ratiopoisson,imdim/4.5,nper);
+        center = centers*2/sqrt(2*log(2));
 
         [finalKLIP(:,:,i),KLIP_res,KLIP_parangs]=KLIP(dur,imdim,total,parangs);
         finalICA(:,:,i)=ICA(KLIP_res,KLIP_parangs,imdim);
@@ -30,28 +31,28 @@ for i=1:numpoints
         disp(horzcat(['The Analysis is roughly ' num2str(percentage) '% complete.']))
 
         img_scaled = imresize(finalKLIP(:,:,i),2/sqrt(2*log(2)),'bicubic');
-        [klipA(:,:,i),D] = snrMap2(img_scaled,2,centers);        
+        [klipA(:,:,i),D] = snrMap2(img_scaled,2,center);        
         centKLIP = gaussCent2(finalKLIP(:,:,i), 0.5, [centers(1)-csize centers(1)+csize], [centers(2)-csize centers(2)+csize]);
         errKLIP(j)=norm(centKLIP-centers);
         clc
         disp(horzcat(['The Analysis is roughly ' num2str(percentage) '% complete.']))
 
         img_scaled = imresize(finalICA(:,:,i),2/sqrt(2*log(2)),'bicubic');
-        [icaA(:,:,i),D] = snrMap2(img_scaled,2,centers);
+        [icaA(:,:,i),D] = snrMap2(img_scaled,2,center);
         centICA = gaussCent2(finalICA(:,:,i), 0.5, [centers(1)-csize centers(1)+csize], [centers(2)-csize centers(2)+csize]);
         errICA(j)=norm(centICA-centers);
         clc
         disp(horzcat(['The Analysis is roughly ' num2str(percentage) '% complete.']))
         
         img_scaled = imresize(finalSSA(:,:,i),2/sqrt(2*log(2)),'bicubic');
-        [ssaA(:,:,i),D] = snrMap2(img_scaled,2,centers);
+        [ssaA(:,:,i),D] = snrMap2(img_scaled,2,center);
         centSSA = gaussCent2(finalSSA(:,:,i), 0.5, [centers(1)-csize centers(1)+csize], [centers(2)-csize centers(2)+csize]);
         errSSA(j)=norm(centSSA-centers);
         clc
         disp(horzcat(['The Analysis is roughly ' num2str(percentage) '% complete.']))
         
         img_scaled = imresize(finalCSP(:,:,i),2/sqrt(2*log(2)),'bicubic');
-        [cspA(:,:,i),D] = snrMap2(img_scaled,2,centers);
+        [cspA(:,:,i),D] = snrMap2(img_scaled,2,center);
         centCSP = gaussCent2(finalCSP(:,:,i), 0.5, [centers(1)-csize centers(1)+csize], [centers(2)-csize centers(2)+csize]);
         errCSP(j)=norm(centCSP-centers);
         clc

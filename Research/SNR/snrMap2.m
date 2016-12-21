@@ -37,7 +37,7 @@ parfor r = 1:rows
         %location, and the section halfwidth respectively
         z = img(r_vals_corr,c_vals_corr);
         
-        if img(r,c)<mean(mean(img)) || abs(r-center(1))>10 || abs(c-center(2))>10
+        if img(r,c)<mean(mean(img)) || abs(r-center(2))>5 || abs(c-center(1))>5
             newImg(r,c) = 1;
         else
             [x,y] = meshgrid(1:length(r_vals_corr),1:length(c_vals_corr));
