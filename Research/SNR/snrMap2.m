@@ -1,4 +1,4 @@
-function [newImg,dataArray] = snrMap2(img, sectionHW)
+function [newImg,dataArray] = snrMap2(img, sectionHW,center)
 % SNRMAP Generates a map of signal-to-noise ratio for a square image
 %   Assumes signals follow multivariate gaussian distrubution
 %   sectionHW is the half width of sections used to traverse the image, and
@@ -37,7 +37,7 @@ parfor r = 1:rows
         %location, and the section halfwidth respectively
         z = img(r_vals_corr,c_vals_corr);
         
-        if img(r,c)<mean(mean(img))
+        if img(r,c)<mean(mean(img)) || abs(r-center(1))>10 || abs(c-center(2))>10
             newImg(r,c) = 1;
         else
             [x,y] = meshgrid(1:length(r_vals_corr),1:length(c_vals_corr));
